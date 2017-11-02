@@ -1,7 +1,7 @@
 const request = require('request');
 const twitter = require('twitter');
 const Spotify = require('node-spotify-api');
-const inquirer = require('inquirer')
+const inquirer = require('inquirer');
 const twitterKeys = require('./keys.js');
 const consumerKey = twitterKeys.consumer_key;
 const consumerSecret = twitterKeys.consumer_secret;
@@ -28,7 +28,7 @@ inquirer.prompt([{
     message: "What do you want to do?"
 }]).then(function (answers) {
     var choice = answers.choice;
-    console.log(choice);
+
     testing(choice);
 });
 
@@ -52,12 +52,14 @@ function testing(choice) {
         client.get('statuses/user_timeline', params, function (error, tweets, response) {
             if (!error) {
 
-                let recent = tweets.map(tweet => ({
-                    Tweet: tweet.text,
-                    Date: tweet.created_at
-                }));
+                tweets.forEach(function (tweet) {
+                    console.log(`Tweet: ${tweet.text}, Date: ${tweet.created_at}\n`);
+                });
 
-                console.log("Sure thing, here are your most recent tweets: " + JSON.stringify(recent, null, 4));
+
+
+
+                // console.log("Sure thing, here are your most recent tweets: " + JSON.parse(recent));
 
             }
         });
@@ -97,7 +99,18 @@ function testing(choice) {
                 let album = data.tracks.items[0].album.name;
 
 
-                console.log(`Artist: ${artist}, Song Name: ${songResult}, Album: ${album} Preview: ${link} `);
+                console.log(`
+                                Artist: $ {
+                                    artist
+                                }, Song Name: $ {
+                                    songResult
+                                }, Album: $ {
+                                    album
+                                }
+                                Preview: $ {
+                                    link
+                                }
+                                `);
             });
 
         });
@@ -113,12 +126,18 @@ function testing(choice) {
             name: "movie",
             message: "What movie are you looking up?",
         }]).then(function (title) {
-            console.log(title);
             var movie = title.movie;
-            request(`http://www.omdbapi.com/?apikey=40e9cece&t=${movie}`, function (error, response, body) {
-                console.log(response); // Print the error if one occurred
-                // Print the response status code if a response was received
-                // Print the HTML for the Google homepage.
+            request(`
+                                http: //www.omdbapi.com/?apikey=40e9cece&t=${movie}`, function (error, response, body) {
+                console.log("Title: " + JSON.parse(body).Title);
+                console.log("Release Date: " + JSON.parse(body).Released);
+                console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+                console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+                console.log("Country: " + JSON.parse(body).Country);
+                console.log("Languages: " + JSON.parse(body).Language);
+                console.log("Plot: " + JSON.parse(body).Plot);
+                console.log("Actors: " + JSON.parse(body).Actors);
+
             });
         });
 
