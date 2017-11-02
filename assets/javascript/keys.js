@@ -7,10 +7,5 @@ const twitterKeys = {
     access_token_secret: 'MWKMjIQiG5XIwWrvQJ2prmCrtFDRWg5d8LA0dmwvVzwpc',
 }
 
-const spotifyKeys = {
-    clientID: '2a2eff591838440882cc96db6b28e33b',
-    clientSecret: 'ce4ea765521b46a99353e45e79566cee'
-}
 
-
-module.exports = spotifyKeys;
+module.exports = twitterKeys;

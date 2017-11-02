@@ -3,11 +3,14 @@ const twitter = require('twitter');
 const Spotify = require('node-spotify-api');
 const inquirer = require('inquirer')
 const twitterKeys = require('./keys.js');
-const spotifyKeys = require('./keys.js');
 const consumerKey = twitterKeys.consumer_key;
 const consumerSecret = twitterKeys.consumer_secret;
 const accessKey = twitterKeys.access_token_key;
 const accessSecret = twitterKeys.access_token_secret;
+const spotifyKeys = {
+    clientID: '2a2eff591838440882cc96db6b28e33b',
+    clientSecret: 'ce4ea765521b46a99353e45e79566cee'
+};
 const clientID = spotifyKeys.clientID;
 const clientSecret = spotifyKeys.clientSecret;
 
@@ -23,16 +26,18 @@ inquirer.prompt([{
         "movie search"
     ],
     message: "What do you want to do?"
-}]).then(function (choice) {
+}]).then(function (answers) {
+    var choice = answers.choice;
     console.log(choice);
+    testing(choice);
+});
 
 
 
 
-
-    // twitter funtion
-
-    if (choice = "tweets") {
+// twitter funtion
+function testing(choice) {
+    if (choice === "tweets") {
         let client = new twitter({
             consumer_key: consumerKey,
             consumer_secret: consumerSecret,
@@ -66,7 +71,7 @@ inquirer.prompt([{
 
     // Spotify function
 
-    if (choice = "song look up") {
+    if (choice === "song look up") {
         inquirer.prompt([{
             type: "input",
             name: "songName",
@@ -102,19 +107,20 @@ inquirer.prompt([{
 
 
     //OMDB function
-    if (choice = "movie search") {
+    if (choice === "movie search") {
         inquirer.prompt([{
             type: "input",
             name: "movie",
             message: "What movie are you looking up?",
         }]).then(function (title) {
             console.log(title);
+            var movie = title.movie;
             request(`http://www.omdbapi.com/?apikey=40e9cece&t=${movie}`, function (error, response, body) {
-                console.log('error:', error); // Print the error if one occurred
-                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                console.log('body:', body); // Print the HTML for the Google homepage.
+                console.log(response); // Print the error if one occurred
+                // Print the response status code if a response was received
+                // Print the HTML for the Google homepage.
             });
         });
 
     };
-});
+};
