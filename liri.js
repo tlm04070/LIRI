@@ -3,6 +3,7 @@ const twitter = require('twitter');
 const Spotify = require('node-spotify-api');
 const inquirer = require('inquirer');
 const twitterKeys = require('./keys.js');
+const fs = require('fs');
 const consumerKey = twitterKeys.consumer_key;
 const consumerSecret = twitterKeys.consumer_secret;
 const accessKey = twitterKeys.access_token_key;
@@ -13,6 +14,21 @@ const spotifyKeys = {
 };
 const clientID = spotifyKeys.clientID;
 const clientSecret = spotifyKeys.clientSecret;
+const spotify = new Spotify({
+    id: clientID,
+    secret: clientSecret
+});
+
+let client = new twitter({
+    consumer_key: consumerKey,
+    consumer_secret: consumerSecret,
+    access_token_key: accessKey,
+    access_token_secret: accessSecret
+});
+
+let params = {
+    screen_name: '@JohnDooperDogg1'
+};
 
 
 
@@ -23,48 +39,32 @@ inquirer.prompt([{
     choices: [
         "tweets",
         "song look up",
-        "movie search"
+        "movie search",
+        "do what it says"
     ],
     message: "What do you want to do?"
 }]).then(function (answers) {
     var choice = answers.choice;
 
     testing(choice);
+
 });
 
 
 
 
 // twitter funtion
-function testing(choice) {
+function testing(choice, arrg) {
     if (choice === "tweets") {
-        let client = new twitter({
-            consumer_key: consumerKey,
-            consumer_secret: consumerSecret,
-            access_token_key: accessKey,
-            access_token_secret: accessSecret
-        });
-
-        let params = {
-            screen_name: '@JohnDooperDogg1'
-        };
-
         client.get('statuses/user_timeline', params, function (error, tweets, response) {
             if (!error) {
 
                 tweets.forEach(function (tweet) {
                     console.log(`Tweet: ${tweet.text}, Date: ${tweet.created_at}\n`);
                 });
-
-
-
-
                 // console.log("Sure thing, here are your most recent tweets: " + JSON.parse(recent));
-
             }
         });
-
-
     };
 
 
@@ -72,22 +72,24 @@ function testing(choice) {
 
 
     // Spotify function
-
+    let trackname;
     if (choice === "song look up") {
+
         inquirer.prompt([{
             type: "input",
             name: "songName",
             message: "What song are you looking up?"
         }]).then(function (lookUp) {
-            console.log("testing");
-            let spotify = new Spotify({
-                id: clientID,
-                secret: clientSecret
-            });
+
+            if (arrg === undefined) {
+                trackName = lookUp.songName;
+            } else {
+                trackName = arrg;
+            }
 
             spotify.search({
                 type: 'track',
-                query: lookUp.songName,
+                query: trackName,
                 limit: 1
             }, function (err, data) {
                 if (err) {
@@ -128,6 +130,18 @@ function testing(choice) {
                 console.log("Actors: " + JSON.parse(body).Actors);
 
             });
+        });
+
+    };
+
+
+    if (choice === "do what it says") {
+        fs.readFile("random.txt", "utf8", function (err, data) {
+            let arr = data.split(",");
+            let arr1 = arr[0];
+            let arr2 = arr[1];
+            testing(arr1, arr2);
+            console.log(arr2);
         });
 
     };
