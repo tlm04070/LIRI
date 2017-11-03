@@ -99,18 +99,7 @@ function testing(choice) {
                 let album = data.tracks.items[0].album.name;
 
 
-                console.log(`
-                                Artist: $ {
-                                    artist
-                                }, Song Name: $ {
-                                    songResult
-                                }, Album: $ {
-                                    album
-                                }
-                                Preview: $ {
-                                    link
-                                }
-                                `);
+                console.log(`Artist: ${artist} \n Song Name: ${songResult} \n Album: ${album} \n Preview: ${link}`);
             });
 
         });
@@ -127,8 +116,8 @@ function testing(choice) {
             message: "What movie are you looking up?",
         }]).then(function (title) {
             var movie = title.movie;
-            request(`
-                                http: //www.omdbapi.com/?apikey=40e9cece&t=${movie}`, function (error, response, body) {
+            request(`http://www.omdbapi.com/?apikey=40e9cece&t=${movie}`, function (error, response, body) {
+
                 console.log("Title: " + JSON.parse(body).Title);
                 console.log("Release Date: " + JSON.parse(body).Released);
                 console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
